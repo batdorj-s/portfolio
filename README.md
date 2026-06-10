@@ -2,7 +2,7 @@
 
 A modern, high-performance personal portfolio built with React, Vite, and GSAP. This project showcases design-to-code precision, originating from a [Figma design](https://www.figma.com/design/pEsRyMMYhx47R2gkfblqdh/portfolio-batdorj.s).
 
-## 🚀 Tech Stack
+## Tech Stack
 
 - **Framework:** React 18
 - **Build Tool:** Vite
@@ -11,7 +11,7 @@ A modern, high-performance personal portfolio built with React, Vite, and GSAP. 
 - **Icons:** Lucide React
 - **Development:** TypeScript
 
-## 🛠️ Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -41,13 +41,13 @@ A modern, high-performance personal portfolio built with React, Vite, and GSAP. 
     npm run build
     ```
 
-## 📂 Project Structure
+## Project Structure
 
 - `src/app/components/figma`: UI components translated from Figma.
 - `src/app/components/ui`: Reusable Shadcn UI components.
 - `src/styles`: Global styles and Tailwind configuration.
 - `public/projects`: Optimized project assets.
 
-## 📄 License
+## License
 
 This project is personal work. See `ATTRIBUTIONS.md` for asset credits.
