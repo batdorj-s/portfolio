@@ -1,0 +1,121 @@
+/* Optimized Image Component Styles */
+
+/* Fade-in animation for loaded images */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Skeleton shimmer animation */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Blur fade-out animation */
+@keyframes blurFade {
+  from {
+    opacity: 0.8;
+    filter: blur(20px);
+  }
+  to {
+    opacity: 0;
+    filter: blur(0px);
+  }
+}
+
+/* Container styling */
+.optimized-image-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0000FF 0%, #0000AA 100%);
+  overflow: hidden;
+}
+
+/* Image loading state */
+.optimized-image-loading {
+  animation: fadeIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
+  opacity: 0;
+}
+
+/* Image loaded state - smooth fade in */
+.optimized-image-loaded {
+  animation: fadeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  opacity: 1;
+}
+
+/* Blur placeholder fade out */
+.optimized-image-blur {
+  animation: blurFade 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s forwards;
+}
+
+/* Skeleton loading indicator */
+.optimized-image-skeleton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0) 0%, 
+    rgba(255, 255, 255, 0.2) 50%, 
+    rgba(255, 255, 255, 0) 100%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+  opacity: 0.5;
+  z-index: 1;
+}
+
+/* Skeleton shimmer effect */
+.skeleton-shimmer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%);
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .optimized-image-container {
+    min-height: 300px;
+  }
+}
+
+/* Performance optimization */
+.optimized-image {
+  will-change: opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Lazy loaded images */
+img[loading='lazy'] {
+  opacity: 0;
+}
+
+img[loading='lazy'].optimized-image-loaded {
+  opacity: 1;
+}
+
+/* WebP support indicator */
+@supports (object-fit: cover) {
+  .optimized-image-container {
+    object-fit: cover;
+  }
+}

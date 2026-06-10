@@ -1,0 +1,19 @@
+Image Compression Report
+======================
+Generated: Sun Apr 26 17:57:57 +08 2026
+
+CARD.png: 20.79 MB → 1.27 MB (100% reduction)
+CLZ.PHOTO.POST.png: 33.16 MB → 2.25 MB (100% reduction)
+CLZ.PRE.ORDER.png: 12.83 MB → .58 MB (100% reduction)
+POST.2023.png: 60.27 MB → 6.91 MB (90.0% reduction)
+origami.png: 15.29 MB → .97 MB (100% reduction)
+poster1.png: 59.17 MB → 6.91 MB (90.0% reduction)
+poster2.png: 11.14 MB → .73 MB (100% reduction)
+poster3.png: 9.80 MB → 4.25 MB (60.0% reduction)
+tshirt_design.png: 1.39 MB → .14 MB (90.0% reduction)
+IMG_3421.jpeg: .62 MB → .35 MB (50.0% reduction)
+
+TOTAL:
+Before: 224.50 MB
+After: 24.40 MB
+Reduction: 90.0%
