@@ -1,5 +1,6 @@
 import { ImageWithFallback } from './components/figma/ImageWithFallback';
 import { OptimizedImage } from './components/figma/OptimizedImage';
+import { VideoWithFallback } from './components/figma/VideoWithFallback';
 import { useState, useEffect, useRef } from 'react';
 import { Star, Send } from 'lucide-react';
 import emailjs from '@emailjs/browser';
@@ -98,7 +99,23 @@ export default function App() {
       });
     }
   };
-  const projects = [
+  interface PortfolioProject {
+    title: string;
+    category: string;
+    year: string;
+    tools: string;
+    description: string;
+    image?: string;
+    span?: number;
+    aspect?: string;
+    video?: {
+      mp4: string;
+      webm: string;
+      poster: string;
+    };
+  }
+
+  const projects: PortfolioProject[] = [
     {
       title: "Poster Design 2023",
       category: "Graphic Design",
@@ -178,6 +195,33 @@ export default function App() {
       tools: "Camera, Lightroom",
       description: "Original photography focusing on lighting and composition.",
       image: "/projects/IMG_3421.jpeg"
+    },
+    {
+      title: "Mezorn 2026",
+      category: "Video Editing",
+      year: "2026",
+      tools: "DaVinci Resolve, DJI",
+      description: "Vertical drone film from the Mezorn 2026 shoot — aerial footage edited and color-graded in DaVinci Resolve.",
+      span: 4,
+      aspect: "aspect-[9/16]",
+      video: {
+        mp4: "/videos/mezorn.mp4",
+        webm: "/videos/mezorn.webm",
+        poster: "/videos/mezorn-poster.jpg"
+      }
+    },
+    {
+      title: "Short Film Edit",
+      category: "Video Editing",
+      year: "2026",
+      tools: "DaVinci Resolve",
+      description: "Short-form edit cut and finished in DaVinci Resolve Studio.",
+      span: 8,
+      video: {
+        mp4: "/videos/1.mp4",
+        webm: "/videos/1.webm",
+        poster: "/videos/1-poster.jpg"
+      }
     }
   ];
 
@@ -486,18 +530,30 @@ export default function App() {
                 className={`group cursor-pointer transition-all duration-700 ${
                   visibleElements.has(`project-${index}`) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
                 } ${
-                  index % 4 === 0 ? 'lg:col-span-8' : index % 4 === 3 ? 'lg:col-span-7' : index % 4 === 1 ? 'lg:col-span-4' : 'lg:col-span-5'
+                  project.span ?? (
+                    index % 4 === 0 ? 'lg:col-span-8' : index % 4 === 3 ? 'lg:col-span-7' : index % 4 === 1 ? 'lg:col-span-4' : 'lg:col-span-5'
+                  )
                 }`}
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
                 <div className="relative overflow-hidden bg-white/5 border border-white/10 group-hover:border-white/40 transition-all duration-500">
                   <div className="relative h-full w-full overflow-hidden">
-                    <ImageWithFallback
-                      src={project.image}
-                      alt={project.title}
-                      priority={index < 3}
-                      className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-1000 ease-in-out"
-                    />
+                    {project.video ? (
+                      <VideoWithFallback
+                        video={project.video}
+                        title={project.title}
+                        aspect={project.aspect || 'aspect-video'}
+                        className="h-full"
+                        priority={index < 3}
+                      />
+                    ) : (
+                      <ImageWithFallback
+                        src={project.image}
+                        alt={project.title}
+                        priority={index < 3}
+                        className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-1000 ease-in-out"
+                      />
+                    )}
                   </div>
                   
                   {/* Hover Overlay - Hidden by default, visible only on hover */}
