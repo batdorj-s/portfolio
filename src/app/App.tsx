@@ -5,6 +5,13 @@ import { useState, useEffect, useRef } from 'react';
 import { Star, Send, ArrowUpRight, Instagram, ArrowUp } from 'lucide-react';
 import { Magnetic } from './components/figma/Magnetic';
 import { CustomCursor } from './components/figma/CustomCursor';
+import { Splash } from './components/figma/Splash';
+import { SectionNav } from './components/figma/SectionNav';
+import { CardSpotlight } from './components/figma/CardSpotlight';
+import { ResumeTerminal } from './components/figma/ResumeTerminal';
+import { useTypewriter } from './components/figma/useTypewriter';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import emailjs from '@emailjs/browser';
 
 export default function App() {
@@ -16,6 +23,9 @@ export default function App() {
   const [feedbacks, setFeedbacks] = useState<Record<number, string>>({});
   const [activeFeedback, setActiveFeedback] = useState<Record<number, string>>({});
   const [submittedFeedbacks, setSubmittedFeedbacks] = useState<Record<number, boolean>>({});
+  const [splashVisible, setSplashVisible] = useState(true);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const typedWelcome = useTypewriter('WELCOME — САЙН БАЙНА УУ', 70, true, 0);
 
   const sendFeedback = async (index: number) => {
     const project = projects[index];
@@ -49,7 +59,7 @@ export default function App() {
       const progress = (scrollTop / docHeight) * 100;
       setScrollProgress(progress);
 
-      const sections = ['intro', 'about', 'portfolio', 'contact'];
+      const sections = ['intro', 'about', 'portfolio', 'instagram', 'contact'];
       const currentSection = sections.find(sectionId => {
         const element = document.getElementById(sectionId);
         if (element) {
@@ -102,6 +112,72 @@ export default function App() {
       'color:#0000FF;font-size:11px;font-family:monospace;'
     );
   }, []);
+
+  // Scroll reveal for [data-reveal] elements
+  useEffect(() => {
+    const els = document.querySelectorAll('[data-reveal]');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-in');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    els.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [splashVisible]);
+
+  // GSAP intro + parallax
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Split-text hero intro once splash is gone
+    gsap.fromTo(
+      '.hero-letter',
+      { y: 100, opacity: 0 },
+      { y: 0, opacity: 1, duration: 1.1, stagger: 0.12, ease: 'power4.out', delay: splashVisible ? 2.6 : 0.1 }
+    );
+
+    // Parallax drift on .parallax[data-parallax]
+    gsap.utils.toArray<HTMLElement>('.parallax').forEach((el) => {
+      const amount = el.dataset.parallax ? parseFloat(el.dataset.parallax) : 60;
+      gsap.fromTo(
+        el,
+        { y: 0 },
+        {
+          y: () => -amount,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: el,
+            start: 'top bottom',
+            end: 'bottom top',
+            scrub: 1,
+          },
+        }
+      );
+    });
+
+    // Hero background МОНГОЛ drifts slower than scroll
+    gsap.fromTo(
+      '.hero-bg-mongol',
+      { yPercent: 0 },
+      {
+        yPercent: 22,
+        ease: 'none',
+        scrollTrigger: { trigger: '#intro', start: 'top top', end: 'bottom top', scrub: 1 },
+      }
+    );
+
+    return () => {
+      gsap.killTweensOf('.hero-letter');
+    };
+  }, [splashVisible]);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -281,7 +357,7 @@ export default function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0000FF] text-white">
+    <div ref={rootRef} className="min-h-screen bg-[#0000FF] text-white">
       <CustomCursor />
       {/* Scroll Progress Bar */}
       <div className="fixed top-0 left-0 right-0 h-1.5 bg-white/5 z-[100]">
@@ -402,6 +478,24 @@ export default function App() {
           }}
         ></div>
 
+        {/* Giant МОНГОЛ background */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none" aria-hidden="true">
+          <span
+            className="hero-bg-mongol text-[28vw] leading-none text-outline opacity-70"
+            style={{ fontFamily: '"Playfair Display", serif', fontWeight: 700, letterSpacing: '0.05em' }}
+          >
+            МОНГОЛ
+          </span>
+        </div>
+
+        {/* Vertical Mongolian script accents */}
+        <div className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 mglv text-white/15 text-xs md:text-sm hidden md:block pointer-events-none select-none" aria-hidden="true">
+          ᠪᠠᠲᠤᠳᠣᠷᠵᠢ
+        </div>
+        <div className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 mglv text-white/15 text-xs md:text-sm hidden md:block pointer-events-none select-none" aria-hidden="true">
+          ᠤᠯᠠᠭᠠᠨᠪᠠᠭᠠᠲᠤᠷ
+        </div>
+
         <div className="max-w-7xl mx-auto w-full flex flex-col items-center justify-center relative z-10">
           {/* Top Line: PORT with stylized P */}
           <div
@@ -411,10 +505,10 @@ export default function App() {
               visibleElements.has('hero-line-1') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
             }`}
           >
-            <span className="text-[120px] md:text-[220px] lg:text-[320px] leading-[0.8] select-none" style={{ fontFamily: '"UnifrakturMaguntia", serif', fontWeight: 400 }}>
+            <span className="hero-letter text-[120px] md:text-[220px] lg:text-[320px] leading-[0.8] select-none" style={{ fontFamily: '"UnifrakturMaguntia", serif', fontWeight: 400 }}>
               P
             </span>
-            <span className="text-[80px] md:text-[150px] lg:text-[200px] font-serif leading-[0.8] tracking-tight uppercase" style={{ fontFamily: '"Playfair Display", serif', fontWeight: 300 }}>
+            <span className="hero-letter text-[80px] md:text-[150px] lg:text-[200px] font-serif leading-[0.8] tracking-tight uppercase" style={{ fontFamily: '"Playfair Display", serif', fontWeight: 300 }}>
               ort
             </span>
           </div>
@@ -444,10 +538,10 @@ export default function App() {
               visibleElements.has('hero-line-2') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
             }`}
           >
-            <span className="text-[120px] md:text-[220px] lg:text-[320px] leading-[0.8] select-none" style={{ fontFamily: '"UnifrakturMaguntia", serif', fontWeight: 400 }}>
+            <span className="hero-letter text-[120px] md:text-[220px] lg:text-[320px] leading-[0.8] select-none" style={{ fontFamily: '"UnifrakturMaguntia", serif', fontWeight: 400 }}>
               F
             </span>
-            <span className="text-[80px] md:text-[150px] lg:text-[200px] font-serif leading-[0.8] tracking-tight uppercase" style={{ fontFamily: '"Playfair Display", serif', fontWeight: 300 }}>
+            <span className="hero-letter text-[80px] md:text-[150px] lg:text-[200px] font-serif leading-[0.8] tracking-tight uppercase" style={{ fontFamily: '"Playfair Display", serif', fontWeight: 300 }}>
               olio
             </span>
           </div>
@@ -473,11 +567,13 @@ export default function App() {
           <div
             data-animate
             id="hero-welcome"
-            className={`mt-24 text-sm md:text-base tracking-[0.5em] font-light opacity-50 transition-all duration-1000 delay-800 ${
-              visibleElements.has('hero-welcome') ? 'opacity-50 translate-y-0' : 'opacity-0 translate-y-4'
+            className={`mt-24 min-h-[1.5em] text-sm md:text-base tracking-[0.5em] font-light opacity-80 transition-all duration-1000 delay-800 ${
+              visibleElements.has('hero-welcome') ? 'opacity-80 translate-y-0' : 'opacity-0 translate-y-4'
             }`}
+            style={{ fontFamily: '"JetBrains Mono", monospace' }}
           >
-            WELCOME TO MY SPACE
+            {typedWelcome}
+            <span className="caret align-middle" />
           </div>
 
           {/* Scroll Indicator */}
@@ -502,16 +598,28 @@ export default function App() {
       <section id="about" className="min-h-screen px-6 py-32 md:px-12 lg:px-24 bg-white text-[#0000FF] border-t border-[#0000FF]/10 relative overflow-hidden">
         {/* Decorative elements */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-[#0000FF]/5 rounded-full -mr-32 -mt-32 blur-3xl"></div>
+        <div className="absolute right-6 top-1/2 -translate-y-1/2 mglv text-[#0000FF]/10 text-sm hidden lg:block pointer-events-none select-none" aria-hidden="true">
+          ᠮᠣᠩᠭᠣᠯ
+        </div>
         
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 relative z-10">
           {/* Left Side: Large Editorial Title */}
           <div className="lg:col-span-5">
+            <div
+              className="mb-8 text-[10px] tracking-[0.5em] font-bold uppercase flex items-center gap-3"
+              style={{ fontFamily: '"JetBrains Mono", monospace' }}
+            >
+              <span className="opacity-50">МИНИЙ ТУХАЙ</span>
+              <span className="h-px w-10 bg-[#0000FF]/30"></span>
+              <span className="opacity-30">about</span>
+            </div>
             <h2 
               data-animate 
               id="about-title-new"
-              className={`text-[100px] md:text-[150px] lg:text-[180px] font-serif italic leading-[0.85] transition-all duration-700 ${
+              className={`parallax text-[100px] md:text-[150px] lg:text-[180px] font-serif italic leading-[0.85] transition-all duration-700 ${
                 visibleElements.has('about-title-new') ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'
               }`}
+              data-parallax="50"
               style={{ fontFamily: '"Playfair Display", "Georgia", serif' }}
             >
               About<br/>Me
@@ -625,7 +733,7 @@ export default function App() {
                 }`}
                 style={{ transitionDelay: `${index * 100}ms` }}
               >
-                <div className="relative overflow-hidden bg-white/5 border border-white/10 group-hover:border-white/40 transition-all duration-500">
+                <CardSpotlight className="relative overflow-hidden bg-white/5 border border-white/10 group-hover:border-white/40 transition-all duration-500">
                   <div className="relative h-full w-full overflow-hidden">
                     {project.video ? (
                       <VideoWithFallback
@@ -726,9 +834,9 @@ export default function App() {
                       </div>
                     </div>
                   </div>
-                  )}
-                </div>
-                
+)}
+                </CardSpotlight>
+
                 <div className="mt-8 flex justify-between items-start group-hover:px-2 transition-all duration-500">
                   <div className="space-y-1">
                     <h3 className="text-2xl md:text-3xl font-normal leading-tight" style={{fontFamily: '"UnifrakturMaguntia", serif'}}>{project.title}</h3>
@@ -779,6 +887,10 @@ export default function App() {
           <div className="absolute bottom-[-15%] left-[-10%] w-[45%] h-[45%] border border-white/20 rounded-full blur-3xl"></div>
         </div>
 
+        <div className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 mglv text-white/10 text-sm hidden md:block pointer-events-none select-none" aria-hidden="true">
+          ᠤᠭᠠᠯᠵᠠ
+        </div>
+
         <div className="max-w-7xl mx-auto text-center relative z-10">
           <div
             data-animate
@@ -801,9 +913,10 @@ export default function App() {
             id="ig-handle"
           >
             <span
-              className={`block text-[30px] sm:text-[64px] md:text-[130px] lg:text-[170px] leading-none tracking-tight select-none transition-all duration-500 group-hover:opacity-60 ${
+              className={`parallax block text-[30px] sm:text-[64px] md:text-[130px] lg:text-[170px] leading-none tracking-tight select-none transition-all duration-500 group-hover:opacity-60 ${
                 visibleElements.has('ig-handle') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
               }`}
+              data-parallax="40"
               style={{ fontFamily: '"UnifrakturMaguntia", serif' }}
             >
               @btdrj.scd
@@ -836,12 +949,21 @@ export default function App() {
       <section id="contact" className="px-6 py-32 md:px-12 lg:px-24 bg-[#F5F5F5] text-[#0000FF]">
         <div className="max-w-7xl mx-auto">
           {/* Section Title */}
+          <div
+            data-reveal
+            className="reveal-up inline-flex items-center gap-3 px-5 py-2.5 border border-[#0000FF]/20 rounded-full mb-14"
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-500 pulse-dot"></span>
+            <span className="text-[10px] tracking-[0.4em] font-bold uppercase">Open to opportunities</span>
+          </div>
+
           <div 
             data-animate 
             id="final-resume-title"
-            className={`text-[80px] md:text-[120px] lg:text-[180px] font-serif italic mb-24 leading-none transition-all duration-700 ${
+            className={`parallax text-[80px] md:text-[120px] lg:text-[180px] font-serif italic mb-24 leading-none transition-all duration-700 ${
               visibleElements.has('final-resume-title') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
             }`}
+            data-parallax="60"
             style={{ fontFamily: '"Playfair Display", "Georgia", serif' }}
           >
             Resume
@@ -918,11 +1040,19 @@ export default function App() {
               </div>
             </div>
           </div>
+
+          {/* Resume Terminal */}
+          <div data-reveal className="reveal-up mt-28">
+            <ResumeTerminal />
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="px-6 pt-12 pb-24 md:px-12 lg:px-24 bg-[#0000FF] border-t border-white/10">
+      <footer className="px-6 pt-12 pb-24 md:px-12 lg:px-24 bg-[#0000FF] border-t border-white/10 relative overflow-hidden">
+        <div className="absolute right-6 bottom-6 mglv text-white/10 text-xs hidden md:block pointer-events-none select-none" aria-hidden="true">
+          ᠤᠯᠠᠭᠠᠨᠪᠠᠭᠠᠲᠤᠷ
+        </div>
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs tracking-widest opacity-70" style={{ fontFamily: '"JetBrains Mono", monospace' }}>
           <div>© 2026 BATDORJ SUKHBAATAR</div>
           <div className="text-[9px] opacity-50">REACT + VITE · BUILT BY HAND · @btdrj.scd</div>
@@ -957,6 +1087,12 @@ export default function App() {
           <span className="hidden sm:inline w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
         </div>
       </div>
+
+      {/* Section rail */}
+      <SectionNav active={activeSection} onNavigate={scrollToSection} />
+
+      {/* Splash loader */}
+      {splashVisible && <Splash onFinish={() => setSplashVisible(false)} />}
     </div>
   );
 }
