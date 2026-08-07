@@ -6,6 +6,7 @@ import { Star, Send, ArrowUpRight, Instagram, ArrowUp } from 'lucide-react';
 import { Magnetic } from './components/figma/Magnetic';
 import { CustomCursor } from './components/figma/CustomCursor';
 import emailjs from '@emailjs/browser';
+import { Analytics } from '@vercel/analytics/react';
 
 export default function App() {
   const [activeSection, setActiveSection] = useState('intro');
@@ -283,6 +284,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#0000FF] text-white">
       <CustomCursor />
+      <Analytics />
       {/* Scroll Progress Bar */}
       <div className="fixed top-0 left-0 right-0 h-1.5 bg-white/5 z-[100]">
         <div className="relative w-full h-full overflow-visible">
