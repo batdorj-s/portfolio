@@ -17,3 +17,32 @@ html {
 * {
   -ms-overflow-style: none;
 }
+
+::selection {
+  background: #0000FF;
+  color: #ffffff;
+}
+
+/* Marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee 30s linear infinite;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+/* Hero scroll line */
+@keyframes scrollDown {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(400%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}

@@ -2,7 +2,9 @@ import { ImageWithFallback } from './components/figma/ImageWithFallback';
 import { OptimizedImage } from './components/figma/OptimizedImage';
 import { VideoWithFallback } from './components/figma/VideoWithFallback';
 import { useState, useEffect, useRef } from 'react';
-import { Star, Send } from 'lucide-react';
+import { Star, Send, ArrowUpRight, Instagram, ArrowUp } from 'lucide-react';
+import { Magnetic } from './components/figma/Magnetic';
+import { CustomCursor } from './components/figma/CustomCursor';
 import emailjs from '@emailjs/browser';
 
 export default function App() {
@@ -86,6 +88,21 @@ export default function App() {
     return () => observer.disconnect();
   }, []);
 
+  useEffect(() => {
+    console.log(
+      '%cYou found the source — good instincts.',
+      'color:#0000FF;font-size:13px;font-weight:700;'
+    );
+    console.log(
+      '%c@btdrj.scd — designed & built by Batdorj Sukhbaatar (React + Vite)',
+      'color:#333;font-size:11px;'
+    );
+    console.log(
+      '%c$ curl -s https://port.batdorj.s/whoami',
+      'color:#0000FF;font-size:11px;font-family:monospace;'
+    );
+  }, []);
+
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -106,7 +123,7 @@ export default function App() {
     tools: string;
     description: string;
     image?: string;
-    span?: number;
+    span?: string;
     aspect?: string;
     video?: {
       mp4: string;
@@ -197,36 +214,75 @@ export default function App() {
       image: "/projects/IMG_3421.jpeg"
     },
     {
-      title: "Mezorn 2026",
+      title: "Daily Edit 2026",
       category: "Video Editing",
       year: "2026",
-      tools: "DaVinci Resolve, DJI",
-      description: "Vertical drone film from the Mezorn 2026 shoot — aerial footage edited and color-graded in DaVinci Resolve.",
-      span: 4,
-      aspect: "aspect-[9/16]",
+      tools: "DaVinci Resolve",
+      description: "Daily edit cut and finished in DaVinci Resolve — rhythm, pacing and visual storytelling.",
+      span: "lg:col-span-12",
       video: {
-        mp4: "/videos/mezorn.mp4",
-        webm: "/videos/mezorn.webm",
-        poster: "/videos/mezorn-poster.jpg"
+        mp4: "/videos/daily.mp4",
+        webm: "/videos/daily.webm",
+        poster: "/videos/daily-poster.jpg"
       }
     },
     {
-      title: "Short Film Edit",
+      title: "Video Edit 01",
       category: "Video Editing",
       year: "2026",
       tools: "DaVinci Resolve",
       description: "Short-form edit cut and finished in DaVinci Resolve Studio.",
-      span: 8,
+      span: "lg:col-span-6",
       video: {
         mp4: "/videos/1.mp4",
         webm: "/videos/1.webm",
         poster: "/videos/1-poster.jpg"
+      }
+    },
+    {
+      title: "Video Edit 02",
+      category: "Video Editing",
+      year: "2026",
+      tools: "DaVinci Resolve",
+      description: "Short-form edit cut and finished in DaVinci Resolve Studio.",
+      span: "lg:col-span-6",
+      video: {
+        mp4: "/videos/2.mp4",
+        webm: "/videos/2.webm",
+        poster: "/videos/2-poster.jpg"
+      }
+    },
+    {
+      title: "Video Edit 03",
+      category: "Video Editing",
+      year: "2026",
+      tools: "DaVinci Resolve",
+      description: "Short-form edit cut and finished in DaVinci Resolve Studio.",
+      span: "lg:col-span-6",
+      video: {
+        mp4: "/videos/3.mp4",
+        webm: "/videos/3.webm",
+        poster: "/videos/3-poster.jpg"
+      }
+    },
+    {
+      title: "Video Edit 04",
+      category: "Video Editing",
+      year: "2026",
+      tools: "DaVinci Resolve",
+      description: "Short-form edit cut and finished in DaVinci Resolve Studio.",
+      span: "lg:col-span-6",
+      video: {
+        mp4: "/videos/4.mp4",
+        webm: "/videos/4.webm",
+        poster: "/videos/4-poster.jpg"
       }
     }
   ];
 
   return (
     <div className="min-h-screen bg-[#0000FF] text-white">
+      <CustomCursor />
       {/* Scroll Progress Bar */}
       <div className="fixed top-0 left-0 right-0 h-1.5 bg-white/5 z-[100]">
         <div className="relative w-full h-full overflow-visible">
@@ -336,6 +392,15 @@ export default function App() {
           <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] border border-white/20 rounded-full blur-3xl"></div>
           <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] border border-white/20 rounded-full blur-3xl"></div>
         </div>
+        {/* Developer blueprint grid */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage:
+              'linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px)',
+            backgroundSize: '90px 90px',
+          }}
+        ></div>
 
         <div className="max-w-7xl mx-auto w-full flex flex-col items-center justify-center relative z-10">
           {/* Top Line: PORT with stylized P */}
@@ -362,11 +427,13 @@ export default function App() {
               visibleElements.has('intro-tag') ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
             }`}
           >
-            <div className="flex items-center gap-2 px-6 py-3 border border-white/30 rounded-full backdrop-blur-sm hover:bg-white hover:text-[#0000FF] transition-all duration-500 cursor-pointer group" onClick={() => scrollToSection('about')}>
-              <span className="text-[10px] md:text-xs tracking-[0.3em] font-light">
-                ( A BRIEF INTRODUCTION )
-              </span>
-            </div>
+            <Magnetic>
+              <div className="flex items-center gap-2 px-6 py-3 border border-white/30 rounded-full backdrop-blur-sm hover:bg-white hover:text-[#0000FF] transition-all duration-500 cursor-pointer group" onClick={() => scrollToSection('about')}>
+                <span className="text-[10px] md:text-xs tracking-[0.3em] font-light">
+                  ( A BRIEF INTRODUCTION )
+                </span>
+              </div>
+            </Magnetic>
           </div>
 
           {/* Bottom Line: FOLIO with stylized F */}
@@ -393,11 +460,13 @@ export default function App() {
               visibleElements.has('about-tag') ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
             }`}
           >
-            <div className="flex items-center gap-2 px-8 py-3 border border-white/30 rounded-full backdrop-blur-sm hover:bg-white hover:text-[#0000FF] transition-all duration-500 cursor-pointer group" onClick={() => scrollToSection('about')}>
-              <span className="text-[10px] md:text-xs tracking-[0.3em] font-light">
-                ( ABOUT ME )
-              </span>
-            </div>
+            <Magnetic>
+              <div className="flex items-center gap-2 px-8 py-3 border border-white/30 rounded-full backdrop-blur-sm hover:bg-white hover:text-[#0000FF] transition-all duration-500 cursor-pointer group" onClick={() => scrollToSection('about')}>
+                <span className="text-[10px] md:text-xs tracking-[0.3em] font-light">
+                  ( ABOUT ME )
+                </span>
+              </div>
+            </Magnetic>
           </div>
 
           {/* Welcome Text */}
@@ -409,6 +478,22 @@ export default function App() {
             }`}
           >
             WELCOME TO MY SPACE
+          </div>
+
+          {/* Scroll Indicator */}
+          <div
+            data-animate
+            id="hero-scroll"
+            className={`mt-16 flex flex-col items-center gap-3 transition-all duration-1000 delay-1000 ${
+              visibleElements.has('hero-scroll') ? 'opacity-40 translate-y-0' : 'opacity-0 translate-y-4'
+            }`}
+          >
+            <span className="text-[9px] tracking-[0.5em] uppercase" style={{ fontFamily: '"JetBrains Mono", monospace' }}>
+              Scroll
+            </span>
+            <span className="relative block w-px h-10 bg-white/25 overflow-hidden">
+              <span className="absolute top-0 left-0 w-full h-4 bg-white" style={{ animation: 'scrollDown 1.6s ease-in-out infinite' }}></span>
+            </span>
           </div>
         </div>
       </header>
@@ -521,6 +606,10 @@ export default function App() {
             </div>
           </div>
 
+          <div className="mb-16 text-[10px] tracking-[0.25em] opacity-40" style={{ fontFamily: '"JetBrains Mono", monospace' }}>
+            <span className="opacity-80">$</span> ls ./work — <span className="opacity-80">{projects.length} items</span> · all hand-curated
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 lg:gap-16 mb-24 items-start">
             {projects.map((project, index) => (
               <div
@@ -556,7 +645,8 @@ export default function App() {
                     )}
                   </div>
                   
-                  {/* Hover Overlay - Hidden by default, visible only on hover */}
+                  {/* Hover Overlay - Hidden by default, visible only on hover (video cards stay clean) */}
+                  {!project.video && (
                   <div className="absolute inset-0 bg-[#0000FF] flex flex-col items-center justify-center opacity-0 group-hover:opacity-95 transition-all duration-500 backdrop-blur-md p-10 z-20">
                     <div className="text-white text-center transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500 ease-out">
                       <h3 className="text-2xl md:text-3xl font-bold tracking-tight mb-4 uppercase">
@@ -636,6 +726,7 @@ export default function App() {
                       </div>
                     </div>
                   </div>
+                  )}
                 </div>
                 
                 <div className="mt-8 flex justify-between items-start group-hover:px-2 transition-all duration-500">
@@ -644,6 +735,11 @@ export default function App() {
                     <div className="flex gap-4 items-center">
                       <span className="text-[10px] tracking-[0.3em] font-light uppercase opacity-50">{project.category}</span>
                     </div>
+                    {project.video && project.tools && (
+                      <div className="pt-2 text-[9px] tracking-[0.3em] font-light uppercase opacity-40" style={{ fontFamily: '"JetBrains Mono", monospace' }}>
+                        <span className="opacity-70">&gt;</span> edited with {project.tools}
+                      </div>
+                    )}
                   </div>
                   <div className="text-[10px] tracking-widest font-light opacity-20 group-hover:opacity-100 transition-opacity">
                     {index + 1 < 10 ? `0${index + 1}` : index + 1}
@@ -651,6 +747,87 @@ export default function App() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Marquee Strip */}
+      <div className="relative overflow-hidden border-t border-b border-white/10 bg-[#0000FF] py-6">
+        <div className="flex w-max marquee-track">
+          {[0, 1].map((dup) => (
+            <div key={dup} className="flex shrink-0 items-center">
+              {['GRAPHIC DESIGN', 'EDITORIAL', 'VIDEO EDITING', 'PHOTOGRAPHY', 'BRANDING', 'LOGOS'].map((t) => (
+                <span
+                  key={t}
+                  className="flex items-center gap-8 px-8 text-[11px] tracking-[0.4em] font-light uppercase opacity-60"
+                  style={{ fontFamily: '"JetBrains Mono", monospace' }}
+                >
+                  {t}
+                  <span className="text-white/30 text-[6px]">●</span>
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Instagram Section */}
+      <section id="instagram" className="px-6 py-32 md:px-12 lg:px-24 bg-[#0000FF] border-t border-white/10 relative overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
+          <div className="absolute top-[-15%] right-[-10%] w-[45%] h-[45%] border border-white/20 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-[-15%] left-[-10%] w-[45%] h-[45%] border border-white/20 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto text-center relative z-10">
+          <div
+            data-animate
+            id="ig-kicker"
+            className={`flex justify-center items-center gap-3 transition-all duration-700 ${
+              visibleElements.has('ig-kicker') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
+          >
+            <Instagram size={16} className="opacity-50" />
+            <span className="text-[10px] tracking-[0.4em] font-light uppercase opacity-50">( FOLLOW ALONG )</span>
+          </div>
+
+          <a
+            href="https://www.instagram.com/btdrj.scd/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram @btdrj.scd"
+            className="group block mt-12"
+            data-animate
+            id="ig-handle"
+          >
+            <span
+              className={`block text-[30px] sm:text-[64px] md:text-[130px] lg:text-[170px] leading-none tracking-tight select-none transition-all duration-500 group-hover:opacity-60 ${
+                visibleElements.has('ig-handle') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
+              }`}
+              style={{ fontFamily: '"UnifrakturMaguntia", serif' }}
+            >
+              @btdrj.scd
+            </span>
+          </a>
+
+          <div
+            data-animate
+            id="ig-cta"
+            className={`mt-16 flex justify-center transition-all duration-700 delay-200 ${
+              visibleElements.has('ig-cta') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+            }`}
+          >
+            <Magnetic>
+              <a
+                href="https://www.instagram.com/btdrj.scd/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-4 px-10 py-5 border border-white/30 rounded-full backdrop-blur-sm hover:bg-white hover:text-[#0000FF] transition-all duration-500"
+              >
+                <span className="text-[10px] tracking-[0.4em] font-bold uppercase">SEE MORE ON INSTAGRAM</span>
+                <ArrowUpRight size={18} strokeWidth={2} className="transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1" />
+              </a>
+            </Magnetic>
           </div>
         </div>
       </section>
@@ -728,14 +905,16 @@ export default function App() {
                   visibleElements.has('cv-action') ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                 }`}
               >
-                <a 
-                  href="/batdorj_cv.pdf" 
-                  download="Batdorj_Sukhbaatar_CV.pdf"
-                  className="group relative px-12 py-6 border border-[#0000FF] overflow-hidden transition-all duration-500 hover:text-white w-full sm:w-auto flex items-center justify-center"
-                >
-                  <div className="absolute inset-0 bg-[#0000FF] translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
-                  <span className="relative text-xs tracking-[0.4em] font-bold uppercase">Download Full CV</span>
-                </a>
+                <Magnetic className="w-full sm:w-auto">
+                  <a
+                    href="/batdorj_cv.pdf"
+                    download="Batdorj_Sukhbaatar_CV.pdf"
+                    className="group relative px-12 py-6 border border-[#0000FF] overflow-hidden transition-all duration-500 hover:text-white w-full sm:w-auto flex items-center justify-center"
+                  >
+                    <div className="absolute inset-0 bg-[#0000FF] translate-y-full group-hover:translate-y-0 transition-transform duration-500"></div>
+                    <span className="relative text-xs tracking-[0.4em] font-bold uppercase">Download Full CV</span>
+                  </a>
+                </Magnetic>
               </div>
             </div>
           </div>
@@ -743,12 +922,41 @@ export default function App() {
       </section>
 
       {/* Footer */}
-      <footer className="px-6 py-12 md:px-12 lg:px-24 bg-[#0000FF] border-t border-white/10">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs tracking-widest opacity-70">
+      <footer className="px-6 pt-12 pb-24 md:px-12 lg:px-24 bg-[#0000FF] border-t border-white/10">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs tracking-widest opacity-70" style={{ fontFamily: '"JetBrains Mono", monospace' }}>
           <div>© 2026 BATDORJ SUKHBAATAR</div>
-          <div>CREATED BY BATDORJ SUKHBAATAR</div>
+          <div className="text-[9px] opacity-50">REACT + VITE · BUILT BY HAND · @btdrj.scd</div>
         </div>
       </footer>
+
+      {/* Back to Top */}
+      {scrollProgress > 4 && (
+        <button
+          type="button"
+          aria-label="Back to top"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="fixed bottom-24 right-4 md:right-6 z-40 w-11 h-11 flex items-center justify-center border border-white/30 rounded-full bg-[#0000FF]/85 backdrop-blur-md hover:bg-white hover:text-[#0000FF] transition-all duration-300"
+        >
+          <ArrowUp size={16} strokeWidth={2} />
+        </button>
+      )}
+
+      {/* Dev Status Bar */}
+      <div
+        className="fixed bottom-0 left-0 right-0 z-40 px-4 md:px-6 py-2 bg-[#0000FF]/85 backdrop-blur-md border-t border-white/10 flex justify-between items-center text-[9px] tracking-[0.25em] select-none"
+        style={{ fontFamily: '"JetBrains Mono", monospace' }}
+      >
+        <div className="flex items-center gap-3">
+          <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+          <span className="uppercase opacity-70">port.batdorj.s</span>
+          <span className="hidden sm:inline opacity-30">v2.1.0</span>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="hidden md:inline opacity-30">Ulaanbaatar, MN</span>
+          <span className="opacity-70">$ npm run creative</span>
+          <span className="hidden sm:inline w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+        </div>
+      </div>
     </div>
   );
 }
