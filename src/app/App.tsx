@@ -2,7 +2,7 @@ import { ImageWithFallback } from './components/figma/ImageWithFallback';
 import { OptimizedImage } from './components/figma/OptimizedImage';
 import { VideoWithFallback } from './components/figma/VideoWithFallback';
 import { useState, useEffect, useRef } from 'react';
-import { Star, Send, ArrowUpRight, Instagram, ArrowUp } from 'lucide-react';
+import { Star, Send, ArrowUpRight, Instagram, ArrowUp, X } from 'lucide-react';
 import { Magnetic } from './components/figma/Magnetic';
 import { CustomCursor } from './components/figma/CustomCursor';
 import { Splash } from './components/figma/Splash';
@@ -24,6 +24,8 @@ export default function App() {
   const [activeFeedback, setActiveFeedback] = useState<Record<number, string>>({});
   const [submittedFeedbacks, setSubmittedFeedbacks] = useState<Record<number, boolean>>({});
   const [splashVisible, setSplashVisible] = useState(true);
+  const [isTouch, setIsTouch] = useState(false);
+  const [openProject, setOpenProject] = useState<number | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const typedWelcome = useTypewriter('WELCOME — САЙН БАЙНА УУ', 70, true, 0);
 
@@ -53,11 +55,16 @@ export default function App() {
   };
 
   useEffect(() => {
+    setIsTouch(window.matchMedia('(hover: none)').matches);
+  }, []);
+
+  useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.pageYOffset;
       const docHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
       const progress = (scrollTop / docHeight) * 100;
       setScrollProgress(progress);
+      setOpenProject(null);
 
       const sections = ['intro', 'about', 'portfolio', 'instagram', 'contact'];
       const currentSection = sections.find(sectionId => {
@@ -408,13 +415,13 @@ export default function App() {
       </div>
 
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 px-6 md:px-12 py-6 bg-[#0000FF]/95 backdrop-blur-sm z-50 border-b border-white/10">
+      <nav className="fixed top-0 left-0 right-0 px-4 md:px-12 py-4 md:py-6 bg-[#0000FF]/95 backdrop-blur-sm z-50 border-b border-white/10">
         <div className="max-w-7xl mx-auto flex justify-between items-center text-xs tracking-widest">
-          <div>PORTFOLIO — APR 2026</div>
-          <div className="flex gap-8">
+          <div className="hidden md:block">PORTFOLIO — APR 2026</div>
+          <div className="flex gap-3 md:gap-8 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <button
               onClick={() => scrollToSection('intro')}
-              className={`relative transition-all duration-300 hover:tracking-[0.2em] ${
+              className={`relative whitespace-nowrap transition-all duration-300 hover:tracking-[0.2em] ${
                 activeSection === 'intro' ? 'opacity-100' : 'opacity-70'
               }`}
             >
@@ -425,7 +432,7 @@ export default function App() {
             </button>
             <button
               onClick={() => scrollToSection('about')}
-              className={`relative transition-all duration-300 hover:tracking-[0.2em] ${
+              className={`relative whitespace-nowrap transition-all duration-300 hover:tracking-[0.2em] ${
                 activeSection === 'about' ? 'opacity-100' : 'opacity-70'
               }`}
             >
@@ -436,7 +443,7 @@ export default function App() {
             </button>
             <button
               onClick={() => scrollToSection('portfolio')}
-              className={`relative transition-all duration-300 hover:tracking-[0.2em] ${
+              className={`relative whitespace-nowrap transition-all duration-300 hover:tracking-[0.2em] ${
                 activeSection === 'portfolio' ? 'opacity-100' : 'opacity-70'
               }`}
             >
@@ -447,7 +454,7 @@ export default function App() {
             </button>
             <button
               onClick={() => scrollToSection('contact')}
-              className={`relative transition-all duration-300 hover:tracking-[0.2em] ${
+              className={`relative whitespace-nowrap transition-all duration-300 hover:tracking-[0.2em] ${
                 activeSection === 'contact' ? 'opacity-100' : 'opacity-70'
               }`}
             >
@@ -457,7 +464,7 @@ export default function App() {
               )}
             </button>
           </div>
-          <div className="text-right">bataabat905@gmail.com</div>
+          <div className="text-right hidden md:block">bataabat905@gmail.com</div>
         </div>
       </nav>
 
@@ -724,6 +731,10 @@ export default function App() {
                 key={index}
                 data-animate
                 id={`project-${index}`}
+                onClick={() => {
+                  if (!isTouch || project.video) return;
+                  setOpenProject(prev => (prev === index ? null : index));
+                }}
                 className={`group cursor-pointer transition-all duration-700 ${
                   visibleElements.has(`project-${index}`) ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
                 } ${
@@ -755,8 +766,36 @@ export default function App() {
                   
                   {/* Hover Overlay - Hidden by default, visible only on hover (video cards stay clean) */}
                   {!project.video && (
-                  <div className="absolute inset-0 bg-[#0000FF] flex flex-col items-center justify-center opacity-0 group-hover:opacity-95 transition-all duration-500 backdrop-blur-md p-10 z-20">
-                    <div className="text-white text-center transform translate-y-8 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+                  <div
+                    className={`absolute inset-0 bg-[#0000FF] flex flex-col items-center backdrop-blur-md p-6 md:p-10 z-20 transition-all duration-500 ${
+                      isTouch && openProject === index
+                        ? 'overflow-y-auto overscroll-contain'
+                        : 'overflow-hidden justify-center'
+                    } ${
+                      isTouch
+                        ? openProject === index
+                          ? 'opacity-95'
+                          : 'opacity-0 pointer-events-none'
+                        : 'opacity-0 group-hover:opacity-95'
+                    }`}
+                  >
+                    {isTouch && openProject === index && (
+                      <button
+                        type="button"
+                        aria-label={`Close ${project.title} details`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setOpenProject(null);
+                        }}
+                        className="sticky top-2 self-end z-30 w-9 h-9 flex items-center justify-center rounded-full border border-white/30 bg-white/10 backdrop-blur-md hover:bg-white hover:text-[#0000FF] transition-all duration-300"
+                      >
+                        <X size={16} strokeWidth={2} />
+                      </button>
+                    )}
+                    <div
+                      className="text-white text-center m-auto transition-transform duration-500 ease-out"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <h3 className="text-2xl md:text-3xl font-bold tracking-tight mb-4 uppercase">
                         {project.title}
                       </h3>
