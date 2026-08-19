@@ -81,7 +81,7 @@ export function VideoWithFallback({
   return (
     <div
       ref={containerRef}
-      className={`relative w-full overflow-hidden bg-[#0000FF]/10 ${aspect} ${className}`}
+      className={`relative w-full overflow-hidden bg-brand/10 ${aspect} ${className}`}
     >
       <video
         ref={videoRef}
@@ -131,7 +131,7 @@ export function VideoWithFallback({
             type="button"
             aria-label={`Play ${title}`}
             onClick={handleToggle}
-            className="absolute bottom-3 right-3 flex items-center gap-2 px-3 py-2 bg-white/15 backdrop-blur-md border border-white/30 rounded-full text-white text-[9px] tracking-[0.25em] uppercase hover:bg-white hover:text-[#0000FF] transition-all duration-300 group-hover:scale-110 z-30 cursor-pointer"
+            className="absolute bottom-3 right-3 flex items-center gap-2 px-3 py-2 bg-white/15 backdrop-blur-md border border-white/30 rounded-full text-white text-[9px] tracking-[0.25em] uppercase hover:bg-white hover:text-brand transition-all duration-300 group-hover:scale-110 z-30 cursor-pointer"
           >
             <Play size={14} strokeWidth={2} className="fill-current" />
             Play

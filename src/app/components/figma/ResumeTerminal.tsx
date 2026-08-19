@@ -246,7 +246,7 @@ export function ResumeTerminal() {
   return (
     <div
       ref={ref}
-      className="border border-[#0000FF]/20 bg-[#0000FF] text-white shadow-[0_20px_60px_-30px_rgba(0,0,255,0.5)]"
+      className="border border-brand/20 bg-brand text-white shadow-[0_20px_60px_-30px_rgba(0,0,255,0.5)]"
       style={{ fontFamily: '"JetBrains Mono", monospace' }}
     >
       {/* —— Title bar —— */}
