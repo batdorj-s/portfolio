@@ -199,7 +199,7 @@ export default function App() {
     );
     els.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
-  }, [splashVisible]);
+  }, []);
 
   // GSAP intro + parallax
   useEffect(() => {
@@ -289,7 +289,7 @@ export default function App() {
       gsap.killTweensOf('#hero-line-1, #hero-line-2, #intro-tag');
       ScrollTrigger.getAll().forEach((st) => st.kill());
     };
-  }, [splashVisible]);
+  }, []);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
